@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Personal portfolio website for Mahmudul Hasan, a software engineer with experience in embedded systems, C/C++, web technologies, and product development."
+    />
+    <title>Mahmudul Hasan | Portfolio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container nav">
+        <a href="#home" class="brand">MH</a>
+        <nav class="nav-links" aria-label="Main navigation">
+          <a href="#about">About</a>
+          <a href="#projects">Projects</a>
+          <a href="#skills">Skills</a>
+          <a href="#contact">Contact</a>
+        </nav>
+        <a href="#contact" class="button button-small">Let’s talk</a>
+      </div>
+    </header>
+
+    <main id="home">
+      <section class="hero">
+        <div class="container hero-grid">
+          <div class="hero-copy">
+            <p class="eyebrow">Hello, I’m Mahmudul Hasan</p>
+            <h1>Software engineer with a passion for systems, products, and problem-solving.</h1>
+            <p class="lead">
+              I build reliable software solutions across embedded systems, desktop tools,
+              and web-based applications with a focus on performance, maintainability,
+              and practical user value.
+            </p>
+            <div class="cta-row">
+              <a href="#projects" class="button">View my work</a>
+              <a href="#about" class="button button-secondary">About me</a>
+              <a href="Mahmudul_Hasan.pdf" class="button button-ghost" download>Download CV</a>
+            </div>
+            <ul class="quick-stats" aria-label="Key highlights">
+              <li><strong>6+</strong><span>Years experience</span></li>
+              <li><strong>20+</strong><span>Projects shipped</span></li>
+              <li><strong>100%</strong><span>Curiosity-driven</span></li>
+            </ul>
+          </div>
+
+          <div class="hero-card" aria-label="Profile card">
+            <div class="avatar-wrap">
+              <img
+                class="profile-photo"
+                src="me.jpeg"
+                alt="Mahmudul Hasan portrait"
+              />
+            </div>
+            <div class="card-details">
+              <span class="label">Based in</span>
+              <strong>Dhaka, Bangladesh</strong>
+            </div>
+            <div class="card-details">
+              <span class="label">Currently</span>
+              <strong>Sr. Software Engineer</strong>
+            </div>
+            <div class="card-details">
+              <span class="label">Focus</span>
+              <strong>C/C++ + Embedded + Web</strong>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="about" class="section">
+        <div class="container section-intro">
+          <p class="eyebrow">About me</p>
+          <h2>I build reliable software solutions for real-world technical challenges.</h2>
+        </div>
+        <div class="container about-grid">
+          <div class="about-copy">
+            <p>
+              I’m Mahmudul Hasan, a software engineer with experience in C/C++, embedded
+              systems, desktop and web technologies, and product-oriented development. My
+              work focuses on designing and implementing practical systems that solve
+              technical problems efficiently and effectively.
+            </p>
+            <p>
+              My professional journey includes roles at TechOptions, Samsung Bangladesh
+              R&D Center, and Social Cube Limited, where I contributed to IoT systems,
+              optical measurement tools, voice-command interfaces, benchmark tools, and
+              remote access solutions. I’m motivated by continuous learning, clean engineering,
+              and creating software that delivers measurable value.
+            </p>
+          </div>
+          <div class="info-panel">
+            <div>
+              <span class="label">Email</span>
+              <a href="mailto:sohel.official@gmail.com">sohel.official@gmail.com</a>
+            </div>
+            <div>
+              <span class="label">Phone</span>
+              <a href="tel:+8801730433343">+8801730433343</a>
+            </div>
+            <div>
+              <span class="label">LinkedIn</span>
+              <a href="https://www.linkedin.com/in/mahmudulhasan364/" target="_blank" rel="noreferrer">linkedin.com/in/mahmudulhasan364</a>
+            </div>
+            <div>
+              <span class="label">Education</span>
+              <strong>BSc in CSE, Jahangirnagar University</strong>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="projects" class="section muted-section">
+        <div class="container section-intro">
+          <p class="eyebrow">Selected work</p>
+          <h2>Projects built with clarity and purpose.</h2>
+        </div>
+        <div class="container project-grid">
+          <article class="project-card">
+            <div class="project-tag">Industrial Software</div>
+            <h3>Optical Measurement Systems</h3>
+            <p>
+              Developed software for laser-based measurement systems including VibroGo,
+              VibroFlex, and RoboVib using C/C++, MFC, C++/WinRT, and Wt (C++).
+            </p>
+            <ul>
+              <li>System development</li>
+              <li>Measurement tools</li>
+              <li>High-performance C++</li>
+            </ul>
+          </article>
+
+          <article class="project-card">
+            <div class="project-tag">IoT / Embedded</div>
+            <h3>Internet of Things Solutions</h3>
+            <p>
+              Worked on IoT platforms using C/C++, CMake, Make scripts, Linux shell,
+              LibCOAP, Boost, CBOR, Gcov, and LCOV for embedded and connected systems.
+            </p>
+            <ul>
+              <li>Embedded systems</li>
+              <li>Linux tooling</li>
+              <li>Cross-platform development</li>
+            </ul>
+          </article>
+
+          <article class="project-card">
+            <div class="project-tag">Academic Projects</div>
+            <h3>University & Research Work</h3>
+            <p>
+              Built academic and training projects including a calendar system, student
+              data management, barcode reader, IP messenger, and transport management system.
+            </p>
+            <ul>
+              <li>C/C++ / Java / PHP</li>
+              <li>Data management</li>
+              <li>Thesis in academic systems</li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <section id="skills" class="section">
+        <div class="container section-intro">
+          <p class="eyebrow">Skills</p>
+          <h2>Tools and strengths I bring to each project.</h2>
+        </div>
+        <div class="container skill-grid">
+          <div class="skill-box">
+            <h3>Programming</h3>
+            <p>C, C++, Objective C, Java, C#, Assembly, Python, Shell scripting.</p>
+          </div>
+          <div class="skill-box">
+            <h3>Web & Systems</h3>
+            <p>ASP.NET, PHP, CSS, HTML, JavaScript, XML, WordPress, Joomla, Linux tooling.</p>
+          </div>
+          <div class="skill-box">
+            <h3>Tools & Workflow</h3>
+            <p>Git, SVN, TFS, Jenkins, Jira, Agile, TDD, CI, embedded build systems.</p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer id="contact" class="site-footer">
+      <div class="container footer-content">
+        <div>
+          <p class="eyebrow">Let’s connect</p>
+          <h2>Available for freelance and full-time opportunities.</h2>
+        </div>
+        <a href="mailto:sohel.official@gmail.com" class="button">sohel.official@gmail.com</a>
+      </div>
+      <div class="container footer-bottom">
+        <p>© <span id="year"></span> Mahmudul Hasan. Built with care.</p>
+      </div>
+    </footer>
+
+    <script src="script.js"></script>
+  </body>
+</html>
