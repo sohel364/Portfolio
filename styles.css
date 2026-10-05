@@ -358,6 +358,15 @@ ul {
   color: var(--muted);
 }
 
+.project-card a {
+  color: #9fe6ff;
+  text-decoration: none;
+}
+
+.project-card a:hover {
+  text-decoration: underline;
+}
+
 .project-card ul {
   margin: 1rem 0 0;
   padding-left: 1rem;
