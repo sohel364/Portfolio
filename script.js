@@ -7,101 +7,111 @@ async function loadRecentWork() {
     return;
   }
 
+  const recentWorkHeader = recentWorkEl.querySelector('.recent-work-header');
   const owner = 'sohel364';
-  const repo = 'Portfolio';
+  const headers = {
+    Accept: 'application/vnd.github+json',
+    'X-GitHub-Api-Version': '2022-11-28',
+  };
 
   try {
-    const repoRes = await fetch(`https://api.github.com/repos/${owner}/${repo}`, {
-      headers: {
-        Accept: 'application/vnd.github+json',
-        'X-GitHub-Api-Version': '2022-11-28',
-      },
-    });
+    const [reposRes, eventsRes] = await Promise.all([
+      fetch(`https://api.github.com/users/${owner}/repos?type=public&per_page=100&sort=pushed`, { headers }),
+      fetch(`https://api.github.com/users/${owner}/events/public?per_page=100`, { headers }),
+    ]);
 
-    const repoData = repoRes.ok ? await repoRes.json() : null;
-    const repoLanguage = repoData?.language || 'Public repo';
-
-    const commitsRes = await fetch(`https://api.github.com/repos/${owner}/${repo}/commits?per_page=3`, {
-      headers: {
-        Accept: 'application/vnd.github+json',
-        'X-GitHub-Api-Version': '2022-11-28',
-      },
-    });
-
-    if (!commitsRes.ok) {
-      throw new Error(`GitHub API request failed: ${commitsRes.status}`);
+    if (!reposRes.ok || !eventsRes.ok) {
+      throw new Error(`GitHub API request failed: ${reposRes.status}, ${eventsRes.status}`);
     }
 
-    const commits = await commitsRes.json();
+    const [repos, events] = await Promise.all([reposRes.json(), eventsRes.json()]);
+    const languages = new Map(repos.map((repo) => [repo.full_name.toLowerCase(), repo.language || 'Public repo']));
+    const seenCommits = new Set();
+    const recentPushes = events
+      .filter((event) => event.type === 'PushEvent' && event.payload?.head)
+      .filter((event) => {
+        const key = `${event.repo.name.toLowerCase()}:${event.payload.head}`;
 
-    if (!Array.isArray(commits) || commits.length === 0) {
-      recentWorkEl.innerHTML = `
-        <div class="recent-work-header">
-          <span class="label">Recent updates</span>
-        </div>
-        <p><strong>No recent commits found.</strong></p>
-      `;
+        if (seenCommits.has(key)) {
+          return false;
+        }
+
+        seenCommits.add(key);
+        return true;
+      })
+      .slice(0, 3);
+
+    if (recentPushes.length === 0) {
+      const message = document.createElement('p');
+      message.textContent = 'No recent public pushes found.';
+      recentWorkEl.replaceChildren(recentWorkHeader, message);
       return;
     }
 
-    const commitList = commits
-      .slice(0, 3)
-      .map((commit) => {
-        const title = (commit.commit.message || 'Untitled update').split('\n')[0].trim();
-        const date = new Date(commit.commit.author.date).toLocaleDateString(undefined, {
+    const commitDetails = await Promise.all(recentPushes.map(async (event) => {
+      const commitRes = await fetch(
+        `https://api.github.com/repos/${event.repo.name}/commits/${event.payload.head}`,
+        { headers },
+      );
+
+      if (!commitRes.ok) {
+        throw new Error(`GitHub commit request failed: ${commitRes.status}`);
+      }
+
+      const commit = await commitRes.json();
+      return { event, commit };
+    }));
+
+    const commitList = document.createElement('ul');
+    commitList.className = 'recent-work-list';
+
+    commitDetails.forEach(({ event, commit }) => {
+      const item = document.createElement('li');
+      item.className = 'recent-work-item';
+
+      const topline = document.createElement('div');
+      topline.className = 'commit-topline';
+
+      const repository = document.createElement('span');
+      repository.className = 'commit-repo';
+      repository.textContent = event.repo.name;
+
+      const language = document.createElement('span');
+      language.className = 'commit-language';
+      language.textContent = languages.get(event.repo.name.toLowerCase()) || 'Public repo';
+      topline.append(repository, language);
+
+      const title = document.createElement('a');
+      title.className = 'commit-title';
+      title.href = commit.html_url;
+      title.target = '_blank';
+      title.rel = 'noreferrer';
+      title.textContent = (commit.commit.message || 'Untitled update').split('\n')[0].trim();
+
+      const date = document.createElement('span');
+      date.className = 'commit-date';
+      date.textContent = new Date(commit.commit.author.date || event.created_at).toLocaleDateString(undefined, {
           year: 'numeric',
           month: 'short',
           day: 'numeric',
         });
 
-        return `
-          <li class="recent-work-item">
-            <div class="commit-topline">
-              <span class="commit-language">${repoLanguage}</span>
-            </div>
-            <a class="commit-title" href="${commit.html_url}" target="_blank" rel="noreferrer">${title}</a>
-            <span class="commit-date">${date}</span>
-            <a class="change-link" href="${commit.html_url}" target="_blank" rel="noreferrer">View changes</a>
-          </li>
-        `;
-      })
-      .join('');
+      const changesLink = document.createElement('a');
+      changesLink.className = 'change-link';
+      changesLink.href = commit.html_url;
+      changesLink.target = '_blank';
+      changesLink.rel = 'noreferrer';
+      changesLink.textContent = 'View changes';
 
-    recentWorkEl.innerHTML = `
-      <div class="recent-work-header">
-        <span class="label recent-work-title">
-          <span class="git-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-              <circle cx="6" cy="6" r="2.2"></circle>
-              <circle cx="18" cy="6" r="2.2"></circle>
-              <circle cx="18" cy="18" r="2.2"></circle>
-              <path d="M8 6h6a4 4 0 0 1 4 4v4"></path>
-              <path d="M8 6v8a4 4 0 0 0 4 4h4"></path>
-            </svg>
-          </span>
-          Recent updates
-        </span>
-      </div>
-      <ul class="recent-work-list">${commitList}</ul>
-    `;
+      item.append(topline, title, date, changesLink);
+      commitList.append(item);
+    });
+
+    recentWorkEl.replaceChildren(recentWorkHeader, commitList);
   } catch (error) {
-    recentWorkEl.innerHTML = `
-      <div class="recent-work-header">
-        <span class="label recent-work-title">
-          <span class="git-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-              <circle cx="6" cy="6" r="2.2"></circle>
-              <circle cx="18" cy="6" r="2.2"></circle>
-              <circle cx="18" cy="18" r="2.2"></circle>
-              <path d="M8 6h6a4 4 0 0 1 4 4v4"></path>
-              <path d="M8 6v8a4 4 0 0 0 4 4h4"></path>
-            </svg>
-          </span>
-          Recent updates
-        </span>
-      </div>
-      <p><strong>Recent updates unavailable.</strong> This repo may be private or the API is blocked.</p>
-    `;
+    const message = document.createElement('p');
+    message.textContent = 'Recent public updates are unavailable right now.';
+    recentWorkEl.replaceChildren(recentWorkHeader, message);
   }
 }
 
